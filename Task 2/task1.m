@@ -27,9 +27,7 @@ subplot(2,1,2);
 imshow(J);
 title('Gamma Correction');
 
-%imshow(histeq (I,imhist(I) ));
 
-%J = imadjust(I,[0 1],[0 1],gamma);
-%imshow(J);
-%h=ones(10,10)/100;
-%imshow(imfilter(I,h));
+
+
+
