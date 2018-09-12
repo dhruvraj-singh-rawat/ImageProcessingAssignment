@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Part1B</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-09-12"><meta name="DC.source" content="Part1B.m"><style type="text/css">
+      --><title>part3</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-09-12"><meta name="DC.source" content="part3.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -69,100 +69,42 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
   </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
 <span class="comment">%     Dhruvraj Singh Rawat      15UEC022</span>
 
-<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<span class="comment">%                               Fig_1</span>
-
-I=imread(<span class="string">'fig_1.PNG'</span>);   <span class="comment">% Reading Image</span>
-subplot(2,2,1);
+I=imread(<span class="string">'fig_4.jpg'</span>); <span class="comment">% Reading Image</span>
+subplot(3,1,1);
 imshow(I);
 title(<span class="string">'Original Image'</span>);
 
-subplot(2,2,2);
-imhist(I);
-title(<span class="string">'Original Image Histogram'</span>);
+b = imsharpen(I);   <span class="comment">% Applying unsharp masking</span>
+subplot(3,1,2);
+imshow(b);
+title(<span class="string">'Image after Unsharp-Masking'</span>);
 
-subplot(2,2,3);
-J1 = histeq(I,256); <span class="comment">% Histogram equalization</span>
-imshow(J1);
-title(<span class="string">'Histogram Equalization'</span>);
-
-
-subplot(2,2,4);
-imhist(J1); <span class="comment">%Histogram of Image</span>
-title(<span class="string">'Histogram of Image after histeq'</span>);
-
-<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<span class="comment">%                               Fig_2</span>
-
-I1=imread(<span class="string">'fig_2.jpg'</span>); <span class="comment">% Reading Second Image</span>
-figure;
-subplot(2,2,1);
-imshow(I1);
-title(<span class="string">'Original Image'</span>);
-
-subplot(2,2,2);
-imhist(I1);  <span class="comment">%Histogram of Image</span>
-title(<span class="string">'Original Image Histogram'</span>);
-
-subplot(2,2,3);
-J2 = histeq(I1,128);  <span class="comment">% Histogram equalization</span>
-imshow(J2);
-title(<span class="string">'Histogram Equalization'</span>);
-
-
-subplot(2,2,4);
-imhist(J2); <span class="comment">%Histogram of Image</span>
-title(<span class="string">'Histogram of Image after histeq'</span>);
-</pre><img vspace="5" hspace="5" src="Part1B_01.png" alt=""> <img vspace="5" hspace="5" src="Part1B_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+h = fspecial(<span class="string">'laplacian'</span>,0.5);
+I_laplacian = imfilter(I, h,<span class="string">'replicate'</span>);
+I_new=imsubtract(I,I_laplacian); <span class="comment">% Subtracting Laplacian Mask from Image</span>
+subplot(3,1,3);
+imshow(I_new);
+title(<span class="string">'Image after Laplacian Filter'</span>);
+</pre><img vspace="5" hspace="5" src="part3_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     Dhruvraj Singh Rawat      15UEC022
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                               Fig_1
-
-I=imread('fig_1.PNG');   % Reading Image
-subplot(2,2,1); 
+I=imread('fig_4.jpg'); % Reading Image
+subplot(3,1,1);
 imshow(I);
 title('Original Image');
 
-subplot(2,2,2);
-imhist(I);
-title('Original Image Histogram');
+b = imsharpen(I);   % Applying unsharp masking
+subplot(3,1,2);
+imshow(b);
+title('Image after Unsharp-Masking');
 
-subplot(2,2,3);
-J1 = histeq(I,256); % Histogram equalization 
-imshow(J1);
-title('Histogram Equalization');
-
-
-subplot(2,2,4);
-imhist(J1); %Histogram of Image 
-title('Histogram of Image after histeq');
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                               Fig_2
-
-I1=imread('fig_2.jpg'); % Reading Second Image
-figure;
-subplot(2,2,1);
-imshow(I1);
-title('Original Image');
-
-subplot(2,2,2);
-imhist(I1);  %Histogram of Image 
-title('Original Image Histogram');
-
-subplot(2,2,3);
-J2 = histeq(I1,128);  % Histogram equalization 
-imshow(J2);
-title('Histogram Equalization');
-
-
-subplot(2,2,4);
-imhist(J2); %Histogram of Image 
-title('Histogram of Image after histeq');
-
-
+h = fspecial('laplacian',0.5);  
+I_laplacian = imfilter(I, h,'replicate');
+I_new=imsubtract(I,I_laplacian); % Subtracting Laplacian Mask from Image
+subplot(3,1,3);
+imshow(I_new);
+title('Image after Laplacian Filter');
 ##### SOURCE END #####
 --></body></html>
