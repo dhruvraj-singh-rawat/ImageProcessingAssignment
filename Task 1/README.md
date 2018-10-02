@@ -6,3 +6,6 @@
 #### 2. Count the number of red objects (bwconncomp)
 
 #### 3. Draw bounding box and centroid of red color around each object (regionprops). 4. Repeat for G and B components
+
+#### 4. Resize all the image to same size (imresize) 
+#### 5. Add the two images (image_6 and image_7) (imadd)
