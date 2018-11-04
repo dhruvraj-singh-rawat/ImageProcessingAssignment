@@ -1,0 +1,225 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>task2</title><meta name="generator" content="MATLAB 9.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-10-29"><meta name="DC.source" content="task2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">row wise</a></li><li><a href="#3">column wise</a></li><li><a href="#4">observations</a></li><li><a href="#5">reconstruction</a></li><li><a href="#6">low pass filter</a></li><li><a href="#7">image reconstruction</a></li></ul></div><pre class="codeinput"><span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">%     Dhruvraj Singh Rawat      15UEC022</span>
+<span class="comment">%     Yash Sharma               15UEC076</span>
+
+img = imread(<span class="string">'input1.PNG'</span>); <span class="comment">% Input</span>
+img = imresize(img, [256, 256]);
+gray = rgb2gray(img);
+
+[r c] = size(gray);
+
+imshow(gray);
+title(<span class="string">'Original image'</span>);
+figure;
+</pre><img vspace="5" hspace="5" src="task2_01.png" alt=""> <img vspace="5" hspace="5" src="task2_02.png" alt=""> <h2 id="2">row wise</h2><pre class="codeinput"><span class="keyword">for</span> i= 1:r
+    X(i,:) = fft(gray(i,:));
+<span class="keyword">end</span>
+</pre><h2 id="3">column wise</h2><pre class="codeinput"><span class="keyword">for</span> j = 1:c
+    Y(:,j) = fft(X(:,j));
+<span class="keyword">end</span>
+
+
+<span class="comment">% imshow(Y)</span>
+<span class="comment">% title('FFt')</span>
+</pre><h2 id="4">observations</h2><pre class="codeinput">y1 = fftshift(Y);
+y2 = abs(y1);
+
+f1 = log(1+y2);
+f2 = max(f1(:));
+f3 = f1/f2;
+out = im2uint8(f3);
+
+imshow(out)
+title(<span class="string">'Normalized frequency transformation'</span>)
+</pre><img vspace="5" hspace="5" src="task2_03.png" alt=""> <h2 id="5">reconstruction</h2><pre class="codeinput">rec = ifft(y1);
+figure;
+imshow(rec)
+title(<span class="string">'Reconstructed image'</span>)
+</pre><pre class="codeoutput">Warning: Displaying real part of complex input. 
+</pre><img vspace="5" hspace="5" src="task2_04.png" alt=""> <h2 id="6">low pass filter</h2><pre class="codeinput">[x, y] = meshgrid(-128:127, -128:127);
+
+z = sqrt(x.^2 + y.^2);
+
+c = z &lt; 15;
+
+k1 = y1.*c;
+
+k2 = abs(k1);
+
+k3 = log(1+k2);
+
+k4 = max(k3(:));
+
+k5 = k3/k4;
+
+out2 = im2uint8(k5);
+figure;
+imshow(out2)
+title(<span class="string">'After applying low pass filter in freq domain'</span>)
+figure;
+<span class="comment">%imshow(out)</span>
+</pre><img vspace="5" hspace="5" src="task2_05.png" alt=""> <img vspace="5" hspace="5" src="task2_06.png" alt=""> <h2 id="7">image reconstruction</h2><pre class="codeinput">inv = ifft2(k1);
+inv2 = abs(inv);
+inv3 = max(inv2(:));
+
+out3 = inv2/inv3;
+out4 = uint8(out3);
+
+imshow(out3);
+title(<span class="string">'Reconstruction after filtering'</span>)
+</pre><img vspace="5" hspace="5" src="task2_07.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     Dhruvraj Singh Rawat      15UEC022
+%     Yash Sharma               15UEC076
+
+img = imread('input1.PNG'); % Input 
+img = imresize(img, [256, 256]);
+gray = rgb2gray(img);
+
+[r c] = size(gray);
+
+imshow(gray);
+title('Original image');
+figure;
+%% row wise 
+for i= 1:r
+    X(i,:) = fft(gray(i,:));
+end
+
+%% column wise
+
+for j = 1:c
+    Y(:,j) = fft(X(:,j));
+end
+
+ 
+% imshow(Y)
+% title('FFt')
+
+%% observations
+
+y1 = fftshift(Y);
+y2 = abs(y1);
+
+f1 = log(1+y2);
+f2 = max(f1(:));
+f3 = f1/f2;
+out = im2uint8(f3);
+
+imshow(out)
+title('Normalized frequency transformation')
+%% reconstruction
+rec = ifft(y1);
+figure;
+imshow(rec)
+title('Reconstructed image')
+%% low pass filter
+
+[x, y] = meshgrid(-128:127, -128:127);
+
+z = sqrt(x.^2 + y.^2);
+
+c = z < 15;
+
+k1 = y1.*c;
+
+k2 = abs(k1);
+
+k3 = log(1+k2);
+
+k4 = max(k3(:));
+
+k5 = k3/k4;
+
+out2 = im2uint8(k5);
+figure;
+imshow(out2)
+title('After applying low pass filter in freq domain')
+figure;
+%imshow(out)
+
+%% image reconstruction
+
+inv = ifft2(k1);
+inv2 = abs(inv);
+inv3 = max(inv2(:));
+
+out3 = inv2/inv3;
+out4 = uint8(out3);
+
+imshow(out3);
+title('Reconstruction after filtering')
+
+
+
+##### SOURCE END #####
+--></body></html>
